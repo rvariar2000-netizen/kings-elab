@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interval | Adaptive brain training for MCI</title>
+<meta name="description" content="Interval is a doctor-prescribed web app for people with mild cognitive impairment: adaptive brain training plus fortnightly progress checks that tell memory clinics who needs them now.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&family=Lora:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14213D;
+    --teal: #0E7C7B;
+    --teal-soft: #E3F2F1;
+    --coral: #F26B4E;
+    --coral-soft: #FDE9E4;
+    --muted: #5B6770;
+    --light: #EEF4F4;
+    --white: #FFFFFF;
+    --red: #D64545;
+    --blue: #2F6FB3;
+    --green: #2E9E5B;
+    --radius: 18px;
+    --max: 1120px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Lato", Calibri, Arial, sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; font-size: 17px; }
+  h1, h2, h3 { font-family: "Poppins", Arial, sans-serif; line-height: 1.15; }
+  a { color: inherit; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  .kicker { font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--coral); margin-bottom: 12px; }
+  .serif { font-family: "Lora", Georgia, serif; font-style: italic; }
+  section { padding: 88px 0; }
+
+  /* Nav */
+  nav { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid #E4EBEE; }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: "Poppins", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -.02em; }
+  .brand svg { width: 38px; height: 38px; }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 15px; }
+  .nav-links a { text-decoration: none; color: var(--muted); }
+  .nav-links a:hover { color: var(--ink); }
+  .btn { display: inline-block; padding: 13px 24px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 0; cursor: pointer; font-size: 16px; font-family: inherit; }
+  .btn-primary { background: var(--coral); color: var(--white); }
+  .btn-primary:hover { filter: brightness(.95); }
+  .btn-ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .nav-links .btn { color: var(--white); padding: 9px 18px; font-size: 14px; }
+
+  /* Hero */
+  .hero { padding: 72px 0 88px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .hero h1 { font-size: clamp(38px, 5vw, 58px); letter-spacing: -.02em; margin-bottom: 18px; }
+  .hero h1 span { color: var(--teal); }
+  .hero p.lead { font-size: 20px; color: var(--muted); max-width: 520px; margin-bottom: 28px; }
+  .hero .ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .ticks { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 28px; font-size: 15px; font-weight: 700; color: var(--coral); }
+  .status { display: inline-block; background: var(--teal-soft); color: var(--teal); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+
+  /* Dashboard mock */
+  .dash { background: var(--white); border-radius: var(--radius); box-shadow: 0 20px 50px rgba(20,33,61,.12); padding: 24px; border: 1px solid #E4EBEE; }
+  .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .dash-head strong { font-size: 17px; }
+  .dash-head small { color: var(--muted); font-size: 13px; }
+  .row { display: flex; align-items: center; gap: 14px; background: #F5F8F9; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .row .txt { flex: 1; }
+  .row .txt b { display: block; font-size: 15px; }
+  .row .txt span { font-size: 13px; color: var(--muted); }
+  .row svg { width: 96px; height: 30px; flex: none; }
+
+  /* Problem */
+  .problem { background: var(--ink); color: var(--white); }
+  .problem h2 { font-size: clamp(30px, 4vw, 44px); margin-bottom: 14px; }
+  .problem .quote { font-size: 22px; color: #C9D6DE; margin-bottom: 44px; }
+  .timeline { display: flex; align-items: center; gap: 14px; margin-bottom: 52px; }
+  .timeline .node { width: 22px; height: 22px; border-radius: 50%; background: var(--teal); flex: none; box-shadow: 0 0 0 4px rgba(14,124,123,.3); }
+  .timeline .gap { flex: 1; border-top: 3px dashed var(--coral); position: relative; }
+  .timeline .gap span { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); background: var(--ink); color: var(--coral); font-weight: 700; padding: 4px 14px; border: 1px solid var(--coral); border-radius: 999px; white-space: nowrap; font-size: 15px; }
+  .labels { display: flex; justify-content: space-between; margin-top: -40px; margin-bottom: 52px; font-weight: 700; color: #7FD1CC; font-size: 14px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .stat b { font-family: "Poppins", sans-serif; font-size: 44px; color: var(--white); display: block; line-height: 1.1; }
+  .stat span { color: #C9D6DE; }
+
+  /* How it works */
+  .center { text-align: center; max-width: 720px; margin: 0 auto 52px; }
+  .center h2 { font-size: clamp(30px, 4vw, 44px); margin-bottom: 14px; }
+  .center p { color: var(--muted); font-size: 19px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { background: var(--light); border-radius: var(--radius); padding: 30px; position: relative; }
+  .card .num { position: absolute; top: -16px; left: 24px; width: 36px; height: 36px; border-radius: 50%; background: var(--coral); color: var(--white); font-weight: 700; display: grid; place-items: center; border: 3px solid var(--white); }
+  .card h3 { font-size: 21px; margin: 8px 0 10px; }
+  .card p { color: var(--muted); }
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 6px; }
+  .pill.train { background: var(--teal-soft); color: var(--teal); }
+  .pill.check { background: var(--coral-soft); color: var(--coral); }
+
+  /* Engine */
+  .engine { background: var(--teal); color: var(--white); border-radius: 28px; padding: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .engine h2 { font-size: clamp(28px, 3.4vw, 40px); margin-bottom: 14px; }
+  .engine p { color: #D7EFEC; margin-bottom: 20px; }
+  .engine ul { list-style: none; }
+  .engine li { padding: 12px 0; border-top: 1px solid rgba(255,255,255,.18); display: flex; gap: 12px; }
+  .engine li::before { content: "→"; color: var(--coral); font-weight: 700; }
+  .tasks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .task { background: rgba(255,255,255,.1); border-radius: 14px; padding: 18px; }
+  .task b { display: block; font-size: 17px; }
+  .task span { font-size: 14px; color: #BFE8E4; }
+  .patent { display: inline-block; background: var(--coral); color: var(--white); font-size: 12px; font-weight: 700; letter-spacing: .1em; padding: 5px 12px; border-radius: 999px; margin-bottom: 16px; }
+
+  /* Who benefits */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .two .card ul { list-style: none; margin-top: 10px; }
+  .two .card li { padding: 8px 0; font-weight: 700; display: flex; gap: 10px; }
+  .two .card li::before { content: "✓"; color: var(--teal); }
+  .two .card.dark { background: var(--ink); color: var(--white); }
+  .two .card.dark li::before { color: var(--coral); }
+
+  /* Trust */
+  .trust { background: var(--light); }
+  .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .trust-grid .card { background: var(--white); }
+
+  /* CTA */
+  .cta { text-align: center; }
+  .cta h2 { font-size: clamp(30px, 4vw, 44px); margin-bottom: 14px; }
+  .cta p { color: var(--muted); font-size: 19px; margin-bottom: 28px; }
+  .cta form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta input { padding: 13px 20px; border-radius: 999px; border: 2px solid #D9E1E5; font-size: 16px; min-width: 280px; font-family: inherit; }
+  .thanks { display: none; margin-top: 18px; color: var(--teal); font-weight: 700; }
+
+  footer { background: var(--ink); color: #C9D6DE; padding: 36px 0; font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; align-items: center; }
+  footer .brand { color: var(--white); font-size: 22px; }
+
+  @media (max-width: 860px) {
+    section { padding: 64px 0; }
+    .hero .wrap, .engine, .two { grid-template-columns: 1fr; }
+    .steps, .stats, .trust-grid { grid-template-columns: 1fr; }
+    .engine { padding: 32px 24px; }
+    .nav-links a:not(.btn) { display: none; }
+    .timeline .gap span { font-size: 12px; padding: 3px 10px; }
+    .cta input { min-width: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Interval home">
+      <svg viewBox="0 0 180 180" aria-hidden="true"><rect width="180" height="180" rx="46" fill="#0E7C7B"/><polyline points="52,90 66,90 76,56 90,126 102,72 112,90 128,90" fill="none" stroke="#F26B4E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="90" r="17" fill="#fff"/><circle cx="140" cy="90" r="17" fill="#fff"/></svg>
+      interval
+    </a>
+    <div class="nav-links">
+      <a href="#problem">The problem</a>
+      <a href="#how">How it works</a>
+      <a href="#engine">Technology</a>
+      <a class="btn btn-primary" href="#contact">Get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="status">In development</span>
+      <h1>Don't let an MCI diagnosis become <span>a year of silence.</span></h1>
+      <p class="lead">Interval is adaptive brain training for people with mild cognitive impairment, prescribed by their clinic, that tells clinicians who's declining, who might recover and who needs them now.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#how">See how it works</a>
+        <a class="btn btn-ghost" href="#contact">Partner with us</a>
+      </div>
+      <div class="ticks">
+        <span>✓ Proven in an RCT before launch</span>
+        <span>✓ Doctor-prescribed</span>
+        <span>✓ Web app with reminders</span>
+      </div>
+    </div>
+
+    <div class="dash" aria-label="Example clinic dashboard">
+      <div class="dash-head"><strong>Clinic dashboard</strong><small>Illustrative</small></div>
+      <div class="row">
+        <span class="dot" style="background:var(--red)"></span>
+        <div class="txt"><b style="color:var(--red)">Declining</b><span>Bring appointment forward</span></div>
+        <svg viewBox="0 0 96 30"><polyline points="4,8 20,10 36,8 52,14 68,19 90,26" fill="none" stroke="#D64545" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="row">
+        <span class="dot" style="background:var(--blue)"></span>
+        <div class="txt"><b style="color:var(--blue)">Improving</b><span>Check reversible causes</span></div>
+        <svg viewBox="0 0 96 30"><polyline points="4,24 20,22 36,24 52,17 68,12 90,5" fill="none" stroke="#2F6FB3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="row">
+        <span class="dot" style="background:var(--green)"></span>
+        <div class="txt"><b style="color:var(--green)">Stable</b><span>Routine review</span></div>
+        <svg viewBox="0 0 96 30"><polyline points="4,15 20,14 36,16 52,15 68,14 90,15" fill="none" stroke="#2E9E5B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="problem" id="problem">
+  <div class="wrap">
+    <p class="kicker">The problem</p>
+    <h2>Diagnosed. Then silence.</h2>
+    <p class="quote serif">"It's mild cognitive impairment. We'll see you in a year."</p>
+
+    <div class="timeline" aria-hidden="true">
+      <span class="node"></span>
+      <div class="gap"><span>6–12 months: no support, no data</span></div>
+      <span class="node"></span>
+    </div>
+    <div class="labels"><span>Diagnosis</span><span>Review</span></div>
+
+    <div class="stats">
+      <div class="stat"><b>5–20%</b><span>of people over 65 live with MCI: memory and thinking worse than expected for their age, but not yet dementia.</span></div>
+      <div class="stat"><b>18%</b><span>of English memory services routinely offer any therapy for MCI.</span></div>
+      <div class="stat"><b>1 in 10</b><span>progress to dementia each year, yet about half stay stable or improve. Right now, nobody can tell who's who.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="center">
+      <p class="kicker">How it works</p>
+      <h2>Train. Track. Act.</h2>
+      <p>The NHS buys Interval, clinicians prescribe it at diagnosis, and patients use it at home on a phone, tablet or laptop.</p>
+    </div>
+    <div class="steps">
+      <div class="card">
+        <span class="num">1</span>
+        <span class="pill train">Train</span>
+        <h3>20 minutes, 3 times a week</h3>
+        <p>Short, adaptive brain games that keep memory and thinking working at the right level of challenge. Reminders keep patients on track, and a family member can help.</p>
+      </div>
+      <div class="card">
+        <span class="num">2</span>
+        <span class="pill check">Track</span>
+        <h3>10-minute check-in, every 2 weeks</h3>
+        <p>The same progress test every time, so any change is real: improving, holding steady or declining. Plus short validated questionnaires on sleep, mood, stress and anxiety.</p>
+      </div>
+      <div class="card">
+        <span class="num">3</span>
+        <span class="pill train">Act</span>
+        <h3>A dashboard clinicians can use</h3>
+        <p>Clinics see who's declining and needs to be seen sooner, who's improving and may have a treatable cause, and who's stable and can wait for routine review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="engine" style="padding-top:0">
+  <div class="wrap">
+    <div class="engine">
+      <div>
+        <span class="patent">PATENT TO BE FILED</span>
+        <h2>An adaptive AI engine at the heart of it</h2>
+        <p>Most brain games are one-size-fits-all: too easy and people get bored, too hard and they give up. Interval adapts to each person as they play.</p>
+        <ul>
+          <li>Tunes difficulty, speed and screen brightness in real time</li>
+          <li>Picks the next task from a roster based on each patient's progress</li>
+          <li>Keeps every patient at the edge of their ability, turning each session into data</li>
+        </ul>
+      </div>
+      <div class="tasks">
+        <div class="task"><b>Spot it fast</b><span>Processing speed</span></div>
+        <div class="task"><b>Where was it?</b><span>Episodic memory</span></div>
+        <div class="task"><b>Keep track</b><span>Working memory</span></div>
+        <div class="task"><b>Connect the dots</b><span>Planning</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap two">
+    <div class="card">
+      <p class="kicker">For patients</p>
+      <h3>Support between appointments</h3>
+      <ul>
+        <li>Treatable causes caught early</li>
+        <li>Decline flagged while treatment can still help</li>
+        <li>Structured support for modifiable risk</li>
+      </ul>
+    </div>
+    <div class="card dark">
+      <p class="kicker">For clinicians</p>
+      <h3>Less work, not more</h3>
+      <ul>
+        <li>Flags only meaningful change</li>
+        <li>Fewer routine follow-ups for stable patients</li>
+        <li>Months of data at every visit</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <div class="center">
+      <p class="kicker">Our promise</p>
+      <h2>Clinically proven before it's prescribed</h2>
+      <p>We will only launch Interval once a randomised controlled trial with real MCI patients and a control group shows it works.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="card"><h3>Evidence first</h3><p>Pilot in NHS memory clinics, then a multi-site RCT against an active control.</p></div>
+      <div class="card"><h3>Regulated</h3><p>Built as UKCA-marked medical software, to NHS clinical safety and data protection standards.</p></div>
+      <div class="card"><h3>What's next</h3><p>A dementia version, so patients who progress keep their support between appointments.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="wrap">
+    <p class="kicker">Get involved</p>
+    <h2>Help us fill the gap</h2>
+    <p>We're looking for memory clinics, clinicians and researchers to shape our pilot.</p>
+    <form id="signup">
+      <input type="email" required placeholder="Your email address" aria-label="Email address">
+      <button class="btn btn-primary" type="submit">Register interest</button>
+    </form>
+    <p class="thanks" id="thanks">Thank you. We'll be in touch soon.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand">interval</span>
+    <span>A concept developed at the King's Entrepreneurship Lab, 2026.</span>
+  </div>
+</footer>
+
+<script>
+  // Demo only: shows a thank-you message. Connect to a form service (e.g. Formspree) to collect emails.
+  document.getElementById('signup').addEventListener('submit', function (e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('thanks').style.display = 'block';
+  });
+</script>
+</body>
+</html>
